@@ -1,0 +1,21 @@
+const request = require('request')
+
+const reverseGeocode = (latitude, longitude, callback) => {
+    const url = `https://api.mapbox.com/search/geocode/v6/reverse?longitude=${longitude}&latitude=${latitude}&access_token=sk.eyJ1IjoianVkaXRoaGluIiwiYSI6ImNseTh6dmw4dTBrbmYya3BxdGV2azdwOTEifQ.HzINoMA9mqbk-5rGFvljkg&limit=1`
+console.log(url)
+
+    request({ url, json: true }, (error, { body }) => {
+        if (error) {
+            console.log({ body })
+            callback('Unable to connect to location services!', undefined)
+        } else if (body.features.length === 0) {
+            callback('Unable to find location. Try another search.', undefined)
+        } else {
+            callback(undefined, {
+                address: body.features[0].properties.full_address
+            })
+        }
+    })
+}
+
+module.exports = reverseGeocode
